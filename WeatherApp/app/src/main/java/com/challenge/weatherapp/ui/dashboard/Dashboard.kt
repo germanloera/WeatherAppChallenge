@@ -3,6 +3,8 @@ package com.challenge.weatherapp.ui.dashboard
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import com.challenge.weatherapp.BuildConfig
 import com.challenge.weatherapp.R
 import com.challenge.weatherapp.databinding.ActivityDashboardBinding
@@ -14,7 +16,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class Dashboard : AppCompatActivity() {
+class Dashboard : ComponentActivity() {
 
     @Inject
     lateinit var apiClient: ApiClient
@@ -25,10 +27,10 @@ lateinit var binding : ActivityDashboardBinding
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        binding = ActivityDashboardBinding.inflate(LayoutInflater.from(this))
+       // binding = ActivityDashboardBinding.inflate(LayoutInflater.from(this))
         val app = application as BaseApp
         app.component.inject(this)
-        setContentView(binding.root)
+        setContent { DashboardLayout() }
 
         //lat=44.34&lon=10.99&appid=
         val params = mapOf("lat" to "44.34", "lon" to "10.99", "appid" to BuildConfig.APP_TOKEN)
