@@ -128,4 +128,6 @@ dependencies {
     implementation('com.github.ihsanbal:LoggingInterceptor:3.1.0') {
         exclude group: 'org.json', module: 'json'
     }
+
+    implementation 'com.jakewharton.timber:timber:5.0.1'
 }

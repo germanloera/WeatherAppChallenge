@@ -1,4 +1,6 @@
 package com.challenge.weatherapp.viewModel
 
-class DashboardViewModel {
+import androidx.lifecycle.ViewModel
+
+class DashboardViewModel : ViewModel() {
 }
