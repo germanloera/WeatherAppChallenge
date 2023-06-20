@@ -16,6 +16,7 @@ import dagger.android.AndroidInjector
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -26,6 +27,7 @@ class Dashboard : ComponentActivity() {
     lateinit var apiClient: ApiClient
 
     private val viewModel : DashboardViewModel by viewModels()
+    private val compositeDisposable = CompositeDisposable()
 
 lateinit var binding : ActivityDashboardBinding
 
@@ -36,21 +38,22 @@ lateinit var binding : ActivityDashboardBinding
        // binding = ActivityDashboardBinding.inflate(LayoutInflater.from(this))
        // val app = application as BaseApp
         //app.component.inject(this)
-
+viewModel.compositeDisposable = compositeDisposable
 viewModel.getWeather()
         setContent { DashboardLayout(viewModel) }
 
 
         //lat=44.34&lon=10.99&appid=
 
-
-
-
-
-
-
-
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
+    }
+
+
 
 
 }

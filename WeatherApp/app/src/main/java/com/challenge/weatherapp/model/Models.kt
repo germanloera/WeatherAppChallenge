@@ -21,7 +21,9 @@ data class Main(
     val humidity: Int,
     val sea_level: Int,
     val grnd_level: Int
-)
+){
+    fun F() = "${((temp - 273.15) * 9/5 + 32).toInt()}°"
+}
 
 data class Wind(
     val speed: Double,
@@ -42,17 +44,26 @@ data class Sys(
 )
 
 data class WeatherDataResponse(
-    val coord: Coord,
-    val weather: List<Weather>,
-    val base: String,
-    val main: Main,
-    val visibility: Int,
-    val wind: Wind,
-    val clouds: Clouds,
-    val dt: Long,
-    val sys: Sys,
-    val timezone: Int,
-    val id: Int,
-    val name: String,
-    val cod: Int
-)
+    val coord: Coord? = null,
+    val weather: List<Weather>? = null,
+    val base: String? = null,
+    val main: Main? = null,
+    val visibility: Int? = null,
+    val wind: Wind? = null,
+    val clouds: Clouds? = null,
+    val dt: Long? = null,
+    val sys: Sys? = null,
+    val timezone: Int? = null,
+    val id: Int? = null,
+    val name: String? = null,
+    val cod: Int? = null
+){
+    fun city(): String{
+        return "$name, ${sys?.country}"
+    }
+
+
+}
+
+
+

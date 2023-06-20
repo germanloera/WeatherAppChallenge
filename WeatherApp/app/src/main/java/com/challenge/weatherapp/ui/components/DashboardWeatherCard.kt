@@ -27,6 +27,7 @@ import com.challenge.weatherapp.R
 @Preview
 @Composable
 fun getWeatherCard(icon: String = "10d@4x.png", temp: String = "30") {
+    val iconUrl = "https://openweathermap.org/img/wn/${icon}@4x.png"
     val paddingModifier = Modifier
         .padding(10.dp)
         .fillMaxWidth()
@@ -35,7 +36,7 @@ fun getWeatherCard(icon: String = "10d@4x.png", temp: String = "30") {
     Card(elevation = elevation, modifier = paddingModifier, shape = RoundedCornerShape(20.dp)) {
         Row {
             GlideImage(
-                model = "https://openweathermap.org/img/wn/10d@4x.png", contentDescription = "",
+                model = iconUrl, contentDescription = "",
                 modifier = Modifier.fillMaxWidth(fraction = 0.5f)
             ) {
                 it.fitCenter()
@@ -48,7 +49,7 @@ fun getWeatherCard(icon: String = "10d@4x.png", temp: String = "30") {
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "35º",
+                    text = temp,
 
                     textAlign = TextAlign.Center,
                     fontSize = 80.sp

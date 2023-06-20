@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,11 +24,15 @@ import com.challenge.weatherapp.viewModel.DashboardViewModel
 
 @Composable
 fun DashboardLayout(viewModel : DashboardViewModel) {
+val weatherState by viewModel.weatherResponse.collectAsState()
+
+
+
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color =  colorResource(id = R.color.clear))
+            .background(color = colorResource(id = R.color.clear))
     ) {
         Row(
             modifier = Modifier
@@ -36,7 +42,11 @@ fun DashboardLayout(viewModel : DashboardViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            getWeatherCard()
+            val icon = weatherState.weather?.first()?.icon ?: ""
+            val temp =  weatherState.main?.F() ?: ""
+
+
+            weatherState.weather?.first()?.icon?.let { getWeatherCard(icon = icon, temp = temp ) }
         }
 
 }
