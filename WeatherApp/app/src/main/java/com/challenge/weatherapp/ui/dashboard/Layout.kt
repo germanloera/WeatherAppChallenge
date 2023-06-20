@@ -17,10 +17,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.challenge.weatherapp.R
 import com.challenge.weatherapp.ui.components.getWeatherCard
+import com.challenge.weatherapp.viewModel.DashboardViewModel
 
-@Preview
+
 @Composable
-fun DashboardLayout() {
+fun DashboardLayout(viewModel : DashboardViewModel) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -37,5 +39,8 @@ fun DashboardLayout() {
             getWeatherCard()
         }
 
-    }
+}
+
+
+
 }

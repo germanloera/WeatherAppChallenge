@@ -10,6 +10,8 @@ import com.ihsanbal.logging.Level
 import com.ihsanbal.logging.LoggingInterceptor
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -18,11 +20,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+@InstallIn(SingletonComponent::class)
 @Module
-class AppModule(private val application: Application) {
+class AppModule() {
 
 
-    @Provides
+  /*  @Provides
     @Singleton
     fun getApplication(): Application {
         return application
@@ -32,11 +35,12 @@ class AppModule(private val application: Application) {
     @Singleton
     fun getContext(): Context {
         return application
-    }
+    }*/
 
     @Provides
     @Singleton
-    fun gsonConverterFactory() = GsonConverterFactory.create()
+    fun gsonConverterFactory() : GsonConverterFactory{
+        return GsonConverterFactory.create() }
 
     @Provides
     @Singleton

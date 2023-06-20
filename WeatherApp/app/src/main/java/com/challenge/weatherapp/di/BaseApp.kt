@@ -4,9 +4,12 @@ import android.app.Application
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
-class BaseApp : Application(), HasAndroidInjector {
+@HiltAndroidApp
+class BaseApp : Application()/*, HasAndroidInjector {
 
     lateinit var component: AppComponent
 
@@ -26,4 +29,4 @@ class BaseApp : Application(), HasAndroidInjector {
     override fun androidInjector(): AndroidInjector<Any> {
         return injector
     }
-}
+} */

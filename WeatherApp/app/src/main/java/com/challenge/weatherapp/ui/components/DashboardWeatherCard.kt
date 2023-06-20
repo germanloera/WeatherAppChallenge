@@ -26,7 +26,7 @@ import com.challenge.weatherapp.R
 @OptIn(ExperimentalGlideComposeApi::class)
 @Preview
 @Composable
-fun getWeatherCard() {
+fun getWeatherCard(icon: String = "10d@4x.png", temp: String = "30") {
     val paddingModifier = Modifier
         .padding(10.dp)
         .fillMaxWidth()
