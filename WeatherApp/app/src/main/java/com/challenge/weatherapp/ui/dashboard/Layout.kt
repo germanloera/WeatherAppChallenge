@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextField
@@ -19,6 +20,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import com.challenge.weatherapp.R
 import com.challenge.weatherapp.ui.components.getWeatherCard
+import com.challenge.weatherapp.ui.components.locationCard
+import com.challenge.weatherapp.ui.components.locationList
 import com.challenge.weatherapp.viewModel.DashboardViewModel
 
 
@@ -52,7 +55,7 @@ fun DashboardLayout(viewModel: DashboardViewModel) {
 
             Row(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.Top
             ) {
@@ -74,6 +77,15 @@ fun DashboardLayout(viewModel: DashboardViewModel) {
                     )
 
                 }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.Top
+            ){
+                locationList(viewModel)
             }
 
         }

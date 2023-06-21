@@ -79,5 +79,21 @@ data class WeatherDataResponse(
 
 }
 
+data class Location(
+    val name: String,
+    val lat: Double,
+    val lon: Double,
+    val country: String,
+    val state: String? = null
+){
+
+    fun locationName(): String {
+        return if(country.equals("us", true)){
+            "$name, $country"
+        }else{
+            "$name, $country"
+        }
+    }
 
 
+}

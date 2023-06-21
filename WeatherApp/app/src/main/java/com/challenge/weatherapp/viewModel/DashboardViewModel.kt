@@ -1,13 +1,8 @@
 package com.challenge.weatherapp.viewModel
 
-import android.provider.SyncStateContract.Constants
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.Constraints
 import androidx.lifecycle.ViewModel
 import com.challenge.weatherapp.BuildConfig
+import com.challenge.weatherapp.model.Location
 import com.challenge.weatherapp.model.WeatherDataResponse
 import com.challenge.weatherapp.networking.ApiClient
 import com.challenge.weatherapp.utils.LOCATION_URL
@@ -33,37 +28,36 @@ class DashboardViewModel @Inject constructor(val api: ApiClient) : ViewModel() {
     lateinit var compositeDisposable: CompositeDisposable
 
     val _cityTextFieldState = MutableStateFlow("")
-    val cityTextFieldValue : StateFlow<String> = _cityTextFieldState.asStateFlow()
+    val cityTextFieldValue: StateFlow<String> = _cityTextFieldState.asStateFlow()
 
-    fun onChangeCityText(city: String){
+    fun onChangeCityText(city: String) {
         _cityTextFieldState.value = city
     }
 
 
     val _errorStateCityTextField = MutableStateFlow(false)
-    val errorValueCityTextField : StateFlow<Boolean> = _errorStateCityTextField.asStateFlow()
+    val errorValueCityTextField: StateFlow<Boolean> = _errorStateCityTextField.asStateFlow()
 
-    fun onErrorStateTextFieldChange(value: Boolean){
+    fun onErrorStateTextFieldChange(value: Boolean) {
         _errorStateCityTextField.value = value
     }
 
 
-   /* val _icon = MutableStateFlow<String>("")
-    val icon: StateFlow<String> = _icon
+    val _locationListState = MutableStateFlow(listOf<Location>())
+    val locationList: StateFlow<List<Location>> = _locationListState.asStateFlow()
 
-    val _temp = MutableStateFlow<String>("")
-    val temp: StateFlow<String> = _temp
+    fun setLocationList(locationResponse: List<Location>) {
+        _locationListState.value = locationResponse
 
-    private fun onIconChanged(icon: String) {
-        _icon.value = "${icon}4x.png"
     }
-*/
+
+
     val params = mutableMapOf<String, String>()
     private var lat = "18.50"
     private var lon = "-88.30"
 
 
-    fun setLatLong(lat: String, lon:String){
+    fun setLatLong(lat: String, lon: String) {
         params.clear()
         this.lat = lat
         this.lon = lon
@@ -72,9 +66,6 @@ class DashboardViewModel @Inject constructor(val api: ApiClient) : ViewModel() {
 
         getWeather()
     }
-
-
-
 
     private fun getWeather() {
         params["appid"] = BuildConfig.APP_TOKEN
@@ -92,24 +83,33 @@ class DashboardViewModel @Inject constructor(val api: ApiClient) : ViewModel() {
 
     }
 
-    fun searchCity(){
+    fun searchCity() {
         params.clear()
         params["limit"] = "5"
         params["q"] = cityTextFieldValue.value
         params["appid"] = BuildConfig.APP_TOKEN
 
 
-        val disposable =  api.getLocation(LOCATION_URL,  params)
+        val disposable = api.getLocation(LOCATION_URL, params)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({},{})
+            .subscribe({
+                setLocationList(it.toSet().toList())
+            }, {
+                it.printStackTrace()
+            })
 
         compositeDisposable.add(disposable)
 
     }
 
 
+    fun loadCityWeather(location: Location) {
+        params.clear()
+        params["q"] = location.locationName().replace(", ", ",", false)
+        getWeather()
 
+    }
 
 
 }
