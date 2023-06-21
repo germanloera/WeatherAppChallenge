@@ -1,5 +1,6 @@
 package com.challenge.weatherapp.di
 
+import android.content.Context
 import com.challenge.weatherapp.BuildConfig
 import com.challenge.weatherapp.networking.ApiClient
 import com.challenge.weatherapp.utils.TIMEOUT_SECONDS
@@ -8,6 +9,7 @@ import com.ihsanbal.logging.LoggingInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -19,19 +21,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class AppModule() {
-
-
-    /*  @Provides
-      @Singleton
-      fun getApplication(): Application {
-          return application
-      }
-
-      @Provides
-      @Singleton
-      fun getContext(): Context {
-          return application
-      }*/
 
     @Provides
     @Singleton
@@ -71,6 +60,16 @@ class AppModule() {
     fun getApiClient(retrofit: Retrofit): ApiClient {
         return retrofit.create(ApiClient::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun provideApplication(@ApplicationContext app: Context):   BaseApp{
+        return app as BaseApp
+    }
+
+
+
+
 
 
 }

@@ -1,5 +1,7 @@
 package com.challenge.weatherapp.model
 
+import com.challenge.weatherapp.utils.Constants
+
 data class Coord(
     val lon: Double,
     val lat: Double
@@ -56,7 +58,8 @@ data class WeatherDataResponse(
     val timezone: Int? = null,
     val id: Int? = null,
     val name: String? = "",
-    val cod: Int? = null
+    val cod: Int? = null,
+    var label : String?=null
 ) {
     fun city(): String {
         var text = ""
@@ -66,7 +69,6 @@ data class WeatherDataResponse(
                 text = it
             }
         }
-
         sys?.country?.let {
             if (it.isNotBlank()) {
                 text = "$text, $it"
@@ -84,12 +86,13 @@ data class Location(
     val lat: Double,
     val lon: Double,
     val country: String,
-    val state: String? = null
+    var state: String? = null
 ){
 
     fun locationName(): String {
         return if(country.equals("us", true)){
-            "$name, $country"
+            state = Constants.states[this.state]
+            "$name, $state, $country"
         }else{
             "$name, $country"
         }

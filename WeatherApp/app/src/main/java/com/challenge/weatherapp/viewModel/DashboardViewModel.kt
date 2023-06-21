@@ -1,11 +1,15 @@
 package com.challenge.weatherapp.viewModel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.challenge.weatherapp.BuildConfig
+import com.challenge.weatherapp.di.BaseApp
 import com.challenge.weatherapp.model.Location
 import com.challenge.weatherapp.model.WeatherDataResponse
 import com.challenge.weatherapp.networking.ApiClient
+import com.challenge.weatherapp.utils.LAST_LOCATION
 import com.challenge.weatherapp.utils.LOCATION_URL
+import com.challenge.weatherapp.utils.PREFERENCES
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -16,11 +20,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class DashboardViewModel @Inject constructor(val api: ApiClient) : ViewModel() {
+class DashboardViewModel @Inject constructor(val api: ApiClient, val app: BaseApp) : ViewModel() {
     //https://proandroiddev.com/two-way-data-binding-in-jetpack-compose-1be55c402ec6
 
     /// val icon = ObservableField("")
     // val temp = ObservableField("")
+
 
     val _weatherState = MutableStateFlow(WeatherDataResponse())
     val weatherResponse: StateFlow<WeatherDataResponse> = _weatherState.asStateFlow()
@@ -67,12 +72,19 @@ class DashboardViewModel @Inject constructor(val api: ApiClient) : ViewModel() {
         getWeather()
     }
 
+    fun getWeather(location :String) {
+        params.clear()
+        params["q"] = location
+        getWeather()
+    }
+
     private fun getWeather() {
         params["appid"] = BuildConfig.APP_TOKEN
 
         val disposable = api.getWeather(params).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()).subscribe(
                 { result ->
+                    result.label = params["q"]
                     _weatherState.value = result
                 }, {
                     it.printStackTrace()
@@ -94,6 +106,7 @@ class DashboardViewModel @Inject constructor(val api: ApiClient) : ViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+
                 setLocationList(it.toSet().toList())
             }, {
                 it.printStackTrace()
@@ -106,6 +119,9 @@ class DashboardViewModel @Inject constructor(val api: ApiClient) : ViewModel() {
 
     fun loadCityWeather(location: Location) {
         params.clear()
+        app.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE).edit()
+            .putString(LAST_LOCATION, location.locationName()).apply()
+
         params["q"] = location.locationName().replace(", ", ",", false)
         getWeather()
 
