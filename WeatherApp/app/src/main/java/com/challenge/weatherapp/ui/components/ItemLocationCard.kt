@@ -28,7 +28,7 @@ fun locationList(viewModel: DashboardViewModel) {
     val list = viewModel.locationList.collectAsState().value
 
     LazyColumn(
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 5.dp)
     ) {
         items(list.size) {
             locationCard(list[it].locationName()) {
@@ -46,7 +46,7 @@ fun locationList(viewModel: DashboardViewModel) {
 @Composable
 fun locationCard(city: String = "Chetumal, MX", onClick: (() -> Unit) = {}) {
     val paddingModifier = Modifier
-        .padding(10.dp)
+        .padding(5.dp)
         .height(50.dp)
         .fillMaxWidth()
     val elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
