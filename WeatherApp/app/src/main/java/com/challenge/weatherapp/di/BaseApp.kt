@@ -1,32 +1,7 @@
 package com.challenge.weatherapp.di
 
 import android.app.Application
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
 
 @HiltAndroidApp
-class BaseApp : Application()/*, HasAndroidInjector {
-
-    lateinit var component: AppComponent
-
-    @Inject
-    lateinit var injector: DispatchingAndroidInjector<Any>
-
-    override fun onCreate() {
-        super.onCreate()
-        setupGraph()
-    }
-
-    private fun setupGraph() {
-        component = DaggerAppComponent.builder().appModule(AppModule(this)).build()
-
-    }
-
-    override fun androidInjector(): AndroidInjector<Any> {
-        return injector
-    }
-} */
+class BaseApp : Application()

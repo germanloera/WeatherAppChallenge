@@ -1,23 +1,20 @@
 package com.challenge.weatherapp.ui.dashboard
 
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.LayoutInflater
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import com.challenge.weatherapp.BuildConfig
-import com.challenge.weatherapp.R
-import com.challenge.weatherapp.databinding.ActivityDashboardBinding
-import com.challenge.weatherapp.di.BaseApp
+import androidx.core.app.ActivityCompat
 import com.challenge.weatherapp.networking.ApiClient
 import com.challenge.weatherapp.viewModel.DashboardViewModel
-import dagger.android.AndroidInjector
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -26,34 +23,72 @@ class Dashboard : ComponentActivity() {
     @Inject
     lateinit var apiClient: ApiClient
 
-    private val viewModel : DashboardViewModel by viewModels()
+    private val viewModel: DashboardViewModel by viewModels()
     private val compositeDisposable = CompositeDisposable()
 
-lateinit var binding : ActivityDashboardBinding
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-       // binding = ActivityDashboardBinding.inflate(LayoutInflater.from(this))
-       // val app = application as BaseApp
-        //app.component.inject(this)
-viewModel.compositeDisposable = compositeDisposable
-viewModel.getWeather()
+        viewModel.compositeDisposable = compositeDisposable
+       // viewModel.getWeather()
         setContent { DashboardLayout(viewModel) }
 
+        requestLocationPermission.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
 
-        //lat=44.34&lon=10.99&appid=
+     //   getLocation()
 
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.dispose()
     }
 
+    @SuppressLint("MissingPermission")
+    private val requestLocationPermission = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
 
+        when {
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                getLocation()
+            }
+
+            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                getLocation()
+            }
+
+            else -> {
+                // No location access granted.
+            }
+        }
+
+
+    }
+
+
+    @SuppressLint("MissingPermission")
+    private fun getLocation() {
+
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+            fusedLocationClient.lastLocation.addOnSuccessListener {
+                val alt = it.altitude
+                val lon = it.longitude
+                viewModel.setLatLong(alt.toString(), lon.toString())
+            }
+
+
+
+    }
 
 
 }
