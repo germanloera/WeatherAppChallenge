@@ -25,7 +25,7 @@ data class Main(
     val sea_level: Int,
     val grnd_level: Int
 ) {
-    fun F() = "${((temp - 273.15) * 9 / 5 + 32).toInt()}°"
+    fun F() = "${((temp - 273.15) * 9 / 5 + 32).toInt()}°F"
 }
 
 data class Wind(

@@ -1,15 +1,23 @@
 package com.challenge.weatherchallenge.viewmodel
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.view.View
+import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 import com.challenge.weatherchallenge.BuildConfig
+import com.challenge.weatherchallenge.databinding.DashboardActivityBinding
 import com.challenge.weatherchallenge.di.BaseApp
 import com.challenge.weatherchallenge.model.Location
 import com.challenge.weatherchallenge.net.ApiClient
 import com.challenge.weatherchallenge.utils.LAST_LOCATION
 import com.challenge.weatherchallenge.utils.LOCATION_URL
 import com.challenge.weatherchallenge.utils.PREFERENCES
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -19,6 +27,15 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(val api: ApiClient, val app: BaseApp) : ViewModel() {
     //https://proandroiddev.com/two-way-data-binding-in-jetpack-compose-1be55c402ec6
+
+    lateinit var binding : DashboardActivityBinding
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    val temp =  ObservableField("")
+    val locationTxt =  ObservableField("")
+
+
+
 
     /// val icon = ObservableField("")
     // val temp = ObservableField("")
@@ -59,7 +76,7 @@ class DashboardViewModel @Inject constructor(val api: ApiClient, val app: BaseAp
     private var lon = "-88.30"
 
 
-    fun setLatLong(lat: String, lon: String) {
+    private fun setLatLong(lat: String, lon: String) {
         params.clear()
         this.lat = lat
         this.lon = lon
@@ -81,10 +98,25 @@ class DashboardViewModel @Inject constructor(val api: ApiClient, val app: BaseAp
         val disposable = api.getWeather(params).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread()).subscribe(
                 { result ->
-                    // result.label = params["q"]
-                    //_weatherState.value = result
+
+                    result.main?.let {
+                        temp.set(it.F())
+                    }
+
+                    result.weather?.let {
+                        val iconUrl = "https://openweathermap.org/img/wn/${it.first().icon}@4x.png"
+                        Glide.with(app).load(iconUrl).diskCacheStrategy(DiskCacheStrategy.ALL).into(binding.iconIv);
+
+
+                    }
+
+
+
+
+
+
                 }, {
-                    it.printStackTrace()
+                   it.printStackTrace()
                 }
             )
 
@@ -124,5 +156,20 @@ class DashboardViewModel @Inject constructor(val api: ApiClient, val app: BaseAp
 
     }
 
+
+
+    @SuppressLint("MissingPermission")
+    fun getLocation(view: View? = null) {
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(app)
+
+        fusedLocationClient.lastLocation.addOnSuccessListener {location : android.location.Location? ->
+            location?.let {
+                val alt = it.altitude
+                val lon = it.longitude
+                setLatLong(alt.toString(), lon.toString())
+            }
+        }
+    }
 
 }
