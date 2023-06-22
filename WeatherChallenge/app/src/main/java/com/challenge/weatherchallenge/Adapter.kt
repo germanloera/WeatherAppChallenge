@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.challenge.weatherchallenge.databinding.LocationItemBinding
 import com.challenge.weatherchallenge.model.Location
 
-class Adapter(private val locations: List<Location>, private val context: Context) :
+class Adapter(private val locations: List<Location>, private val context: Context,val click: ((Location) -> Unit)) :
     RecyclerView.Adapter<ItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -23,11 +23,16 @@ class Adapter(private val locations: List<Location>, private val context: Contex
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.setup(locations[position])
+        val location = locations[position]
+        holder.setup(location)
+        holder.binding.root.setOnClickListener {
+           click.invoke(location)
+        }
+
     }
 }
 
-class ItemViewHolder(private val binding: LocationItemBinding) : ViewHolder(binding.root) {
+class ItemViewHolder( val binding: LocationItemBinding) : ViewHolder(binding.root) {
 
     fun setup(location: Location) {
         binding.location.text = location.locationName()

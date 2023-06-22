@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.challenge.weatherchallenge.databinding.DashboardActivityBinding
 import com.challenge.weatherchallenge.utils.LAST_LOCATION
 import com.challenge.weatherchallenge.utils.PREFERENCES
@@ -21,12 +22,14 @@ class DashboardActivity : ComponentActivity() {
 
     private val viewModel: DashboardViewModel by viewModels()
     lateinit var binding: DashboardActivityBinding
-    val compositeDisposable = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DashboardActivityBinding.inflate(LayoutInflater.from(this))
+
+        binding.rvLocations.layoutManager = LinearLayoutManager(this)
         binding.viewModel = viewModel
         viewModel.binding = binding
         viewModel.compositeDisposable = this.compositeDisposable
@@ -36,13 +39,11 @@ class DashboardActivity : ComponentActivity() {
         val lastlocation = this.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
             .getString(LAST_LOCATION, null)
 
-
         if (lastlocation != null) {
 
-            viewModel.getWeather(lastlocation)
+            viewModel.getLastLocationWeather(lastlocation)
 
         } else {
-
             requestLocationPermission.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -50,8 +51,6 @@ class DashboardActivity : ComponentActivity() {
                 )
             )
         }
-
-
     }
 
 

@@ -60,7 +60,8 @@ data class WeatherDataResponse(
     val id: Int? = null,
     val name: String? = "",
     val cod: Int? = null,
-    var label : String?=null
+    var state: String? = null
+
 ) {
     fun city(): String {
         var text = ""
@@ -70,6 +71,14 @@ data class WeatherDataResponse(
                 text = it
             }
         }
+
+        state?.let {
+            if (it.isNotBlank()) {
+                text = "$text, $it"
+            }
+        }
+
+
         sys?.country?.let {
             if (it.isNotBlank()) {
                 text = "$text, $it"
@@ -88,13 +97,17 @@ data class Location(
     val lon: Double,
     val country: String,
     var state: String? = null
-){
+) {
 
+    var stateAb: String = ""
     fun locationName(): String {
-        return if(country.equals("us", true)){
-            state = Constants.states[this.state]
-            "$name, $state, $country"
-        }else{
+        return if (country.equals("us", true)) {
+            state?.let { st ->
+                val key = Constants.states.keys.find { it.equals(st, true) }
+                stateAb = Constants.states[key] ?: ""
+            }
+            "$name, $stateAb, $country"
+        } else {
             "$name, $country"
         }
     }
