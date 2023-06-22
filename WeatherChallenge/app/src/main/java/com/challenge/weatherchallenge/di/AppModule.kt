@@ -2,6 +2,7 @@ package com.challenge.weatherchallenge.di
 
 import android.content.Context
 import com.challenge.weatherchallenge.BuildConfig
+import com.challenge.weatherchallenge.net.ApiClient
 import com.challenge.weatherchallenge.utils.TIMEOUT_SECONDS
 import com.ihsanbal.logging.Level
 import com.ihsanbal.logging.LoggingInterceptor

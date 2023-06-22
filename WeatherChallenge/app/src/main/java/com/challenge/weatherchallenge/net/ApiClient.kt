@@ -1,8 +1,8 @@
 package com.challenge.weatherchallenge.net
 
 
-import com.challenge.weatherapp.model.Location
-import com.challenge.weatherapp.model.WeatherDataResponse
+import com.challenge.weatherchallenge.model.Location
+import com.challenge.weatherchallenge.model.WeatherDataResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
