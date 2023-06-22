@@ -2,14 +2,12 @@ package com.challenge.weatherchallenge.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.text.Editable
 import android.view.View
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.challenge.weatherchallenge.Adapter
-
 import com.challenge.weatherchallenge.BuildConfig
 import com.challenge.weatherchallenge.databinding.DashboardActivityBinding
 import com.challenge.weatherchallenge.di.BaseApp
@@ -28,7 +26,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(val api: ApiClient, val app: BaseApp) : ViewModel() {
-    //https://proandroiddev.com/two-way-data-binding-in-jetpack-compose-1be55c402ec6
 
     lateinit var binding: DashboardActivityBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -36,45 +33,11 @@ class DashboardViewModel @Inject constructor(val api: ApiClient, val app: BaseAp
     val temp = ObservableField("")
     val locationTxt = ObservableField("")
 
-
-    /// val icon = ObservableField("")
-    // val temp = ObservableField("")
-
-    /*
-        val _weatherState = MutableStateFlow(WeatherDataResponse())
-        val weatherResponse: StateFlow<WeatherDataResponse> = _weatherState.asStateFlow()
-
-        lateinit var compositeDisposable: CompositeDisposable
-
-        val _cityTextFieldState = MutableStateFlow("")
-        val cityTextFieldValue: StateFlow<String> = _cityTextFieldState.asStateFlow()
-
-        fun onChangeCityText(city: String) {
-            _cityTextFieldState.value = city
-        }
-
-
-        val _errorStateCityTextField = MutableStateFlow(false)
-        val errorValueCityTextField: StateFlow<Boolean> = _errorStateCityTextField.asStateFlow()
-
-        fun onErrorStateTextFieldChange(value: Boolean) {
-            _errorStateCityTextField.value = value
-        }
-
-
-        val _locationListState = MutableStateFlow(listOf<Location>())
-        val locationList: StateFlow<List<Location>> = _locationListState.asStateFlow()
-
-        fun setLocationList(locationResponse: List<Location>) {
-            _locationListState.value = locationResponse
-    */
-
     lateinit var compositeDisposable: CompositeDisposable
 
     val params = mutableMapOf<String, String>()
     private var lat = "18.50"
     private var lon = "-88.30"
-
 
     private fun setLatLong(lat: String, lon: String) {
         params.clear()
@@ -110,11 +73,10 @@ class DashboardViewModel @Inject constructor(val api: ApiClient, val app: BaseAp
                             .into(binding.iconIv);
                     }
 
-                    binding.location.text =    if(location.isNullOrBlank()) {
+                    binding.location.text = if (location.isNullOrBlank()) {
 
-
-                         result.city()
-                    }else{
+                        result.city()
+                    } else {
                         location
                     }
 
@@ -151,7 +113,6 @@ class DashboardViewModel @Inject constructor(val api: ApiClient, val app: BaseAp
 
     }
 
-
     private fun loadCityWeather(location: Location) {
         val locationName = location.locationName()
         params.clear()
@@ -162,7 +123,6 @@ class DashboardViewModel @Inject constructor(val api: ApiClient, val app: BaseAp
         getWeather(locationName)
 
     }
-
 
     @SuppressLint("MissingPermission")
     fun getLocation(view: View? = null) {

@@ -63,11 +63,9 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideApplication(@ApplicationContext app: Context):   BaseApp{
+    fun provideApplication(@ApplicationContext app: Context): BaseApp {
         return app as BaseApp
     }
-
-
 
 
 }
