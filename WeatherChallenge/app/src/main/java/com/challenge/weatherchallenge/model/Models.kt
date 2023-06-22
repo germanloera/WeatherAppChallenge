@@ -85,7 +85,7 @@ data class WeatherDataResponse(
             }
         }
 
-        return text
+        return text.ifBlank { "Unnamed location ${sys?.country ?: ""}" }
     }
 
 
